@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import sys
 # 这里我们提供必要的引用。基本控件位于pyqt5.qtwidgets模块中。
 from PyQt5.QtWidgets import *
@@ -14,16 +15,28 @@ if __name__ == '__main__':
     treeview = QTreeView()
     treeview.setModel(file_model)
     treeview.setRootIndex(file_model.index(QDir.currentPath()))
-    treeview.resize(600,800)
-    treeview.show()
+    treeview.header().setSortIndicatorShown(True)
+
+
+
+    mkdirButton = QPushButton("Make Directory...")
+    rmButton = QPushButton("Remove")
+    buttonLayout = QHBoxLayout()
+    buttonLayout.addWidget(mkdirButton)
+    buttonLayout.addWidget(rmButton)
+
+    layout = QVBoxLayout()
+    layout.addWidget(treeview)
+    layout.addLayout(buttonLayout)
+
     # resize()方法调整窗口的大小。这离是250px宽150px高
-    w.resize(250, 150)
+    w.resize(600, 300)
     # move()方法移动窗口在屏幕上的位置到x = 300，y = 300坐标。
     w.move(300, 300)
     # 设置窗口的标题
-    w.setWindowTitle('Hello Qt')
-    # 创建QProcess线程，调用外部程序
-
+    w.setWindowTitle('File Manage')
+    w.setWindowIcon(QIcon('File-Explorer.png'))
+    w.setLayout(layout)
 
     # 显示在屏幕上
     w.show()
