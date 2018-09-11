@@ -36,7 +36,6 @@ class Table(QWidget):  # NOQA
                 self.tableWidget.setItem(row, column, item) #NOQA
         self.tableWidget.setEditTriggers(QAbstractItemView.NoEditTriggers)
         self.tableWidget.sortItems(3,Qt.DescendingOrder)
-        QTimer.singleShot(0, self.update)
         self.tableWidget.setSelectionBehavior(QAbstractItemView.SelectRows)
         self.tableWidget.verticalHeader().setVisible(False)
         self.tableWidget.setContextMenuPolicy(Qt.CustomContextMenu)
@@ -47,6 +46,9 @@ class Table(QWidget):  # NOQA
         # QTableWidget.resizeRowsToContents()
         conLayout.addWidget(self.tableWidget)
         self.setLayout(conLayout)
+        self.timer =  QTimer(self)
+        self.timer.timeout.connect(self.update)
+        self.timer.start(2000)
 
     def generateMenu(self, pos):
         row_num = -1
@@ -64,6 +66,33 @@ class Table(QWidget):  # NOQA
     def keyPressEvent(self, event):
         if(event.key() == Qt.Key_F4):
             self.close()
+
+    def update(self):
+            data = ps.getStatus()
+            self.tableWidget.setRowCount(len(data))  # NOQA
+            self.tableWidget.setColumnCount(6)
+            self.tableWidget.setHorizontalHeaderLabels(['Pid', 'Name', 'Status', 'Memory_info', 'Threads_num', 'Create_time'])
+            for row in range(len(data)):
+                for column in range(6):
+                    if(column == 5):
+                        time_local = time.localtime(int(data[row][column]))
+                        date = time.strftime("%Y-%m-%d %H:%M:%S", time_local)
+                        item = "%s" % (date)  #NOQA
+                        item = QTableWidgetItem(item)
+                        item.setTextAlignment(Qt.AlignHCenter | Qt.AlignVCenter)
+                    else:
+                        item = "%s" % (data[row][column]) #NOQA
+                        item = QTableWidgetItem(item)
+                        item.setTextAlignment(Qt.AlignHCenter | Qt.AlignVCenter)
+                    self.tableWidget.setItem(row, column, item) #NOQA
+            self.tableWidget.setEditTriggers(QAbstractItemView.NoEditTriggers)
+            self.tableWidget.sortItems(3,Qt.DescendingOrder)
+            self.tableWidget.setSelectionBehavior(QAbstractItemView.SelectRows)
+            self.tableWidget.verticalHeader().setVisible(False)
+            self.tableWidget.setContextMenuPolicy(Qt.CustomContextMenu)
+            self.tableWidget.resizeRowsToContents()
+            self.tableWidget.resizeColumnsToContents()
+            self.tableWidget.update()
 
 
 if __name__ == '__main__':
