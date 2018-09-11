@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 import sys
 # 这里我们提供必要的引用。基本控件位于pyqt5.qtwidgets模块中。
-from PyQt5.QtWidgets import *
-from PyQt5.QtGui import *
-from PyQt5.QtCore import *
+from PyQt5.QtWidgets import QWidget, QFileSystemModel, QTreeView, QVBoxLayout, \
+    QApplication,QMenu, QMessageBox, QInputDialog
+from PyQt5.QtGui import QIcon
+from PyQt5.QtCore import QDir, Qt
 
 
 class FileWidget(QWidget):
@@ -88,8 +89,8 @@ class FileWidget(QWidget):
 
     def msgbox(self):
         msgBox = QMessageBox()
-        msgBox.setText("Warning")
-        msgBox.setInformativeText("delete the file/dir?")
+        msgBox.setWindowTitle("Warning")
+        msgBox.setText("Delete the file/dir you selected?")
         msgBox.setStandardButtons(QMessageBox.Yes
                                   | QMessageBox.No)
         msgBox.setDefaultButton(QMessageBox.No)
@@ -104,13 +105,17 @@ class FileWidget(QWidget):
     def mkdirectory(self):
         index = self.treeview.rootIndex()
         if index.isValid():
-            self.file_model.mkdir(index, "new_file")
+            dirname,ok = QInputDialog.getText(self,"File Name","Input an unique dir name:")
+            if ok:
+                self.file_model.mkdir(index, dirname)
+            else:
+                return
 
 
 if __name__ == '__main__':
-    # 每一pyqt5应用程序必须创建一个应用程序对象。sys.argv参数是一个列表，从命令行输入参数。
+    # 每一PyQt5应用程序必须创建一个应用程序对象。sys.argv参数是一个列表，从命令行输入参数。
     app = QApplication(sys.argv)
-    # QWidget部件是pyqt5所有用户界面对象的基类。他为QWidget提供默认构造函数。默认构造函数没有父类。
+    # QWidget部件是PyQt5所有用户界面对象的基类。他为QWidget提供默认构造函数。默认构造函数没有父类。
     widget = FileWidget()
     widget.show()
     sys.exit(app.exec_())
