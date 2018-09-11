@@ -56,16 +56,24 @@ class FileWidget(QWidget):
         self.setWindowIcon(QIcon('File-Explorer.png'))
         self.setLayout(layout)
 
+    # 生成右键菜单
     def generateMenu(self, position):
+        # 索引默认值
         row_num = -1
+        # 遍历确定行号
         for i in self.treeview.selectionModel().selection().indexes():
             row_num = i.row()
+        # 保证选中有效项
         if row_num != -1:
+            # 创建右键菜单
             menu = QMenu()
+            # 提供删除和创建文件/文件夹选项
             item1 = menu.addAction("Delete")
             item2 = menu.addAction("NewDirectory")
+            # 在光标处显示执行菜单
             action = menu.exec_(self.treeview.mapToGlobal(position))
             if action == item1:
+                #弹出消息框确认此次删除操作
                 res = self.msgbox()
                 if res:
                     self.delete()
@@ -78,6 +86,7 @@ class FileWidget(QWidget):
         else:
             return
 
+    # 删除选定文件/文件夹
     def delete(self):
         index = self.treeview.currentIndex()
         if index.isValid():
@@ -87,6 +96,7 @@ class FileWidget(QWidget):
             else:
                 self.file_model.remove(index)
 
+    # 确认框
     def msgbox(self):
         msgBox = QMessageBox()
         msgBox.setWindowTitle("Warning")
@@ -102,9 +112,11 @@ class FileWidget(QWidget):
         elif button == QMessageBox.Yes:
             return True
 
+    # 创建文件夹
     def mkdirectory(self):
         index = self.treeview.rootIndex()
         if index.isValid():
+            # 弹出输入框录入文件名
             dirname,ok = QInputDialog.getText(self,"File Name","Input an unique dir name:")
             if ok:
                 self.file_model.mkdir(index, dirname)
