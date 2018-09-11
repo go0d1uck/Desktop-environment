@@ -13,3 +13,8 @@ def getStatus():
         tup = (pId, p.name(), p.status(), p.memory_percent(), p.num_threads(), p.create_time())
         result.append(tup)
     return result
+
+
+def killProcess(pId):
+    p = psutil.Process(pId)
+    p.terminate()
