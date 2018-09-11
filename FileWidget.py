@@ -27,17 +27,23 @@ class FileWidget(QWidget):
         # 头部显示排序戳
         self.treeview.header().setSortIndicatorShown(True)
 
+        #创建右键菜单
+        self.treeview.setContextMenuPolicy(Qt.CustomContextMenu)
+        # point = self.treeview.pos()
+        self.treeview.customContextMenuRequested.connect(self.generateMenu)
+
+        '''
         # 底部按钮布局
         self.mkdirButton = QPushButton("Make Directory...")
         self.rmButton = QPushButton("Remove")
         buttonLayout = QHBoxLayout()
         buttonLayout.addWidget(self.mkdirButton)
         buttonLayout.addWidget(self.rmButton)
-
+        '''
         #文件管理界面布局
         layout = QVBoxLayout()
         layout.addWidget(self.treeview)
-        layout.addLayout(buttonLayout)
+        # layout.addLayout(buttonLayout)
 
         # resize()方法调整窗口的大小。600px宽300px高
         self.resize(600, 300)
@@ -48,6 +54,36 @@ class FileWidget(QWidget):
         # 设置窗口的图标
         self.setWindowIcon(QIcon('File-Explorer.png'))
         self.setLayout(layout)
+
+    def generateMenu(self,position):
+        row_num = -1
+        for i in self.treeview.selectionModel().selection().indexes():
+            row_num = i.row()
+        if row_num != -1:
+            menu = QMenu()
+            item1 = menu.addAction("Delete")
+            item2 = menu.addAction("NewDirectory")
+            action = menu.exec_(self.treeview.mapToGlobal(position))
+        if action == item1:
+            self.delete()
+        elif action == item2:
+            self.mkdirectory()
+        else:
+            return
+
+    def delete(self):
+        index = self.treeview.currentIndex()
+        if index.isValid():
+            fileInfo = self.file_model.fileInfo(index)
+            if fileInfo.isDir():
+                self.file_model.rmdir(index)
+            else:
+                self.file_model.remove(index)
+
+    def mkdirectory(self):
+        index = self.treeview.rootIndex()
+        if index.isValid():
+           self.file_model.mkdir(index,"new_file")
 
 
 if __name__ == '__main__':
