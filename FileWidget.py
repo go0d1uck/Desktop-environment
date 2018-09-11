@@ -27,7 +27,7 @@ class FileWidget(QWidget):
         # 头部显示排序戳
         self.treeview.header().setSortIndicatorShown(True)
 
-        #创建右键菜单
+        # 创建右键菜单
         self.treeview.setContextMenuPolicy(Qt.CustomContextMenu)
         # point = self.treeview.pos()
         self.treeview.customContextMenuRequested.connect(self.generateMenu)
@@ -40,7 +40,7 @@ class FileWidget(QWidget):
         buttonLayout.addWidget(self.mkdirButton)
         buttonLayout.addWidget(self.rmButton)
         '''
-        #文件管理界面布局
+        # 文件管理界面布局
         layout = QVBoxLayout()
         layout.addWidget(self.treeview)
         # layout.addLayout(buttonLayout)
@@ -55,7 +55,7 @@ class FileWidget(QWidget):
         self.setWindowIcon(QIcon('File-Explorer.png'))
         self.setLayout(layout)
 
-    def generateMenu(self,position):
+    def generateMenu(self, position):
         row_num = -1
         for i in self.treeview.selectionModel().selection().indexes():
             row_num = i.row()
@@ -65,7 +65,11 @@ class FileWidget(QWidget):
             item2 = menu.addAction("NewDirectory")
             action = menu.exec_(self.treeview.mapToGlobal(position))
             if action == item1:
-                self.delete()
+                res = self.msgbox()
+                if res:
+                    self.delete()
+                else:
+                    return
             elif action == item2:
                 self.mkdirectory()
             else:
@@ -82,10 +86,25 @@ class FileWidget(QWidget):
             else:
                 self.file_model.remove(index)
 
+    def msgbox(self):
+        msgBox = QMessageBox()
+        msgBox.setText("Warning")
+        msgBox.setInformativeText("delete the file/dir?")
+        msgBox.setStandardButtons(QMessageBox.Yes
+                                  | QMessageBox.No)
+        msgBox.setDefaultButton(QMessageBox.No)
+        # button = QMessageBox.question("Warning", "delete the file/dir?",
+        #                               QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+        button = msgBox.exec_()
+        if button == QMessageBox.No:
+            return False
+        elif button == QMessageBox.Yes:
+            return True
+
     def mkdirectory(self):
         index = self.treeview.rootIndex()
         if index.isValid():
-           self.file_model.mkdir(index,"new_file")
+            self.file_model.mkdir(index, "new_file")
 
 
 if __name__ == '__main__':
