@@ -64,10 +64,12 @@ class FileWidget(QWidget):
             item1 = menu.addAction("Delete")
             item2 = menu.addAction("NewDirectory")
             action = menu.exec_(self.treeview.mapToGlobal(position))
-        if action == item1:
-            self.delete()
-        elif action == item2:
-            self.mkdirectory()
+            if action == item1:
+                self.delete()
+            elif action == item2:
+                self.mkdirectory()
+            else:
+                return
         else:
             return
 
