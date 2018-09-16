@@ -15,7 +15,6 @@ class FileWidget(QWidget):
         self.file_model = QFileSystemModel()
         # 设置目录为当前工作目录
         self.file_model.setRootPath(QDir.currentPath())
-        self.file_model
         # 创建树视图，构建文件目录视图
         self.treeview = QTreeView()
         # 绑定此文件模型
