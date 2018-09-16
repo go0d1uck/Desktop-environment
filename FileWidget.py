@@ -15,6 +15,7 @@ class FileWidget(QWidget):
         self.file_model = QFileSystemModel()
         # 设置目录为当前工作目录
         self.file_model.setRootPath(QDir.currentPath())
+        self.file_model
         # 创建树视图，构建文件目录视图
         self.treeview = QTreeView()
         # 绑定此文件模型
@@ -126,6 +127,7 @@ class FileWidget(QWidget):
     def keyPressEvent(self, event):
         if event.key() == Qt.Key_F3:
             self.close()
+
 
 if __name__ == '__main__':
     # 每一PyQt5应用程序必须创建一个应用程序对象。sys.argv参数是一个列表，从命令行输入参数。
