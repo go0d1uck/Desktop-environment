@@ -1,4 +1,4 @@
-# Desktop-environment
+# File Management part of Desktop-environment
 Just for software design
 能够提供一个文件显示窗口。
   a)	显示本操作系统整个文件系统的目录，并按照层次向用户显示文件和文件夹。
